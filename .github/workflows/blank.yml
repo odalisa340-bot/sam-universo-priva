@@ -1,3 +1,4 @@
+
 name: Build Sam Android APK
 
 on:
@@ -25,10 +26,14 @@ jobs:
           java-version: "17"
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        run: |
+          echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> "$GITHUB_ENV"
+          echo "/usr/local/lib/android/sdk/platform-tools" >> "$GITHUB_PATH"
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 
       - name: Install Android platform
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+        run: |
+          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
 
       - name: Extract Android project
         run: |
@@ -51,3 +56,4 @@ jobs:
           path: source/Sam_Un_Universo_Griego/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
+          
